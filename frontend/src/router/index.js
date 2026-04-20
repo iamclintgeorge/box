@@ -6,8 +6,8 @@ console.log('Router base:', base) // confirm in browser console
 let router = createRouter({
 	history: createWebHistory('/frontend/'),
 	routes: [
-		// { path: '/setup', name: 'Welcome', component: () => import('@/pages/Welcome.vue') },
-		{ path: '/setup/scan', name: 'SSDScan', component: () => import('@/pages/SSDScan.vue') },
+		{ path: '/', name: 'Welcome', component: () => import('@/pages/Welcome.vue') },
+		{ path: '/scan', name: 'SSDScan', component: () => import('@/pages/SSDScan.vue') },
 		// {
 		// 	path: '/setup/config',
 		// 	name: 'SSDConfig',

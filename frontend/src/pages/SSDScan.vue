@@ -2,7 +2,6 @@
 	<div class="min-h-screen flex flex-col items-center justify-center p-8">
 		<StepIndicator :current="2" :total="4" />
 
-		<h1 class="text-7xl font-bold mt-6 mb-2">Soli Deo Gloria</h1>
 		<h1 class="text-3xl font-bold mt-6 mb-2">Scanning for drives</h1>
 		<p class="text-gray-500 mb-8">We found the following block devices on your system.</p>
 

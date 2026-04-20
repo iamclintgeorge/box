@@ -251,8 +251,8 @@ app_license = "mit"
 # ignore_translatable_strings_from = []
 
 
-# ── WEBSITE ROUTING ───────────────────────────────────────────────────────────
-
+# Wesbite Routing
+# ----------------
 # Serve the Vue SPA's index.html at /setup (and all sub-paths)
 # Frappe will serve the built index.html from box/public/frontend/
 website_route_rules = [
@@ -260,22 +260,24 @@ website_route_rules = [
     {"from_route": "/setup/<path:subpath>", "to_route": "setup"},
 ]
 
-# ── STATIC ASSETS ─────────────────────────────────────────────────────────────
-
+# Static Assets
+# --------------
 # Global JS injected into EVERY desk page
 app_include_js = [
     "/assets/box/js/box_desk.js"
 ]
 
-# ── BOOT SESSION ──────────────────────────────────────────────────────────────
+# Boot Session
+# -------------
 # Attach system_config data to the boot session so the desk JS can read it
 # from `frappe.boot.box_config`
 boot_session = "box.startup.boot.get_boot_data"
 
-# ── FIXTURES ──────────────────────────────────────────────────────────────────
+# Fixtures
+# ---------
 fixtures = [
     {
         "dt": "Custom Field",
-        "filters": [["module", "=", "Box Module"]]
+        "filters": [["module", "=", "Box"]]
     }
 ]
