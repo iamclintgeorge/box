@@ -250,3 +250,32 @@ app_license = "mit"
 # List of apps whose translatable strings should be excluded from this app's translations.
 # ignore_translatable_strings_from = []
 
+
+# ── WEBSITE ROUTING ───────────────────────────────────────────────────────────
+
+# Serve the Vue SPA's index.html at /setup (and all sub-paths)
+# Frappe will serve the built index.html from box/public/frontend/
+website_route_rules = [
+    {"from_route": "/setup", "to_route": "setup"},
+    {"from_route": "/setup/<path:subpath>", "to_route": "setup"},
+]
+
+# ── STATIC ASSETS ─────────────────────────────────────────────────────────────
+
+# Global JS injected into EVERY desk page
+app_include_js = [
+    "/assets/box/js/box_desk.js"
+]
+
+# ── BOOT SESSION ──────────────────────────────────────────────────────────────
+# Attach system_config data to the boot session so the desk JS can read it
+# from `frappe.boot.box_config`
+boot_session = "box.startup.boot.get_boot_data"
+
+# ── FIXTURES ──────────────────────────────────────────────────────────────────
+fixtures = [
+    {
+        "dt": "Custom Field",
+        "filters": [["module", "=", "Box Module"]]
+    }
+]

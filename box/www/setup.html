@@ -1,0 +1,23 @@
+<!-- {% extends "templates/web.html" %} {% block title %}Box Setup{% endblock %} {% block head_include
+%}
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="/assets/box/frontend/assets/index.css" />
+{% endblock %} {% block page_content %}
+<div id="app"></div>
+<script type="module" src="/assets/box/frontend/assets/index.js"></script>
+{% endblock %} {% block footer %}{% endblock %} {% block navbar %}{% endblock %} -->
+
+{% extends "templates/web.html" %} {% block title %}Frappe Box Setup{% endblock %} {% block
+head_include %}
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+{% if frappe.conf.developer_mode %}
+<script type="module" src="http://localhost:8080/@vite/client"></script>
+{% else %}
+<link rel="stylesheet" href="/assets/box/frontend/assets/index.css" />
+{% endif %} {% endblock %} {% block page_content %}
+<div id="app"></div>
+{% if frappe.conf.developer_mode %}
+<script type="module" src="http://localhost:8080/src/main.js"></script>
+{% else %}
+<script type="module" src="/assets/box/frontend/assets/index.js"></script>
+{% endif %} {% endblock %} {% block footer %}{% endblock %} {% block navbar %}{% endblock %}
