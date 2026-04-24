@@ -14,6 +14,7 @@ export const useSetupStore = defineStore('setup', () => {
 		error.value = ''
 		try {
 			const result = await call('box.api.disk.scan_disks')
+			console.log('result from scan_disk', result)
 			disks.value = result.disks || []
 		} catch (e) {
 			error.value = e.message || 'Failed to scan disks'

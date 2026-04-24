@@ -1,6 +1,19 @@
-### Box
+<div align="center">
+  <a href="https://frappe.io">
+    <img src=".github/logo.svg" height="80" width="80" alt="Frappe Box Logo">
+  </a>
+  <h2>Frappe Box</h2>
 
-Plug and play Frappe Server in a box
+**Plug and Play Decentralized Frappe Bench**
+
+</div>
+
+> [!Warning]  
+> Frappe Box is in beta. It is strongly advised to take backups in production use.
+
+## Frappe Box
+
+Frappe Box is a Decentralized platform to host Frappe Bench and Frappe Apps, allowing the users to store their data in their own storage solutions.
 
 ### Installation
 
@@ -28,6 +41,11 @@ Pre-commit is configured to use the following tools for checking and formatting 
 - prettier
 - pyupgrade
 
-### License
-
-mit
+<div align="center" style="padding-top: 0.75rem;">
+	<a href="https://frappe.io" target="_blank">
+		<picture>
+			<source media="(prefers-color-scheme: dark)" srcset="https://frappe.io/files/Frappe-white.png">
+			<img src="https://frappe.io/files/Frappe-black.png" alt="Frappe Technologies" height="28"/>
+		</picture>
+	</a>
+</div>

@@ -1,6 +1,6 @@
 <template>
 	<div class="min-h-screen flex flex-col items-center justify-center p-8">
-		<StepIndicator :current="2" :total="4" />
+		<!-- <StepIndicator :current="2" :total="4" /> -->
 
 		<h1 class="text-3xl font-bold mt-6 mb-2">Scanning for drives</h1>
 		<p class="text-gray-500 mb-8">We found the following block devices on your system.</p>
@@ -15,19 +15,19 @@
 			Scan now
 		</Button>
 
-		<LoadingIndicator v-if="store.loading" class="w-10 h-10 mt-6" />
+		<!-- <LoadingIndicator v-if="store.loading" class="w-10 h-10 mt-6" /> -->
 
-		<ErrorMessage v-if="store.error" :message="store.error" class="mt-4" />
+		<!-- <ErrorMessage v-if="store.error" :message="store.error" class="mt-4" /> -->
 
 		<!-- Disk list -->
 		<div v-if="store.disks.length" class="w-full max-w-2xl mt-6 space-y-3">
-			<DiskCard
+			<!-- <DiskCard
 				v-for="disk in store.disks"
 				:key="disk.name"
 				:disk="disk"
 				:selected="store.selectedDisks.includes('/dev/' + disk.name)"
 				@toggle="toggleDisk(disk)"
-			/>
+			/> -->
 		</div>
 
 		<!-- Navigation -->
