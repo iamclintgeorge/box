@@ -4,6 +4,10 @@ app_publisher = "Frappe Technologies Pvt Ltd"
 app_description = "Plug and play Frappe Server in a box"
 app_email = "clint@frappe.io"
 app_license = "mit"
+app_home = "/box"
+
+# skip_setup_wizard = 1
+setup_wizard_requires_login = 0
 
 # Apps
 # ------------------
@@ -11,15 +15,16 @@ app_license = "mit"
 # required_apps = []
 
 # Each item in the list will be shown as an app in the apps page
-# add_to_apps_screen = [
-# 	{
-# 		"name": "box",
-# 		"logo": "/assets/box/logo.png",
-# 		"title": "Box",
-# 		"route": "/box",
-# 		"has_permission": "box.api.permission.has_app_permission"
-# 	}
-# ]
+add_to_apps_screen = [
+	{
+		"name": "box",
+		"logo": "/assets/box/desktop_icons/box.svg",
+		"title": "Box",
+		"route": "/box",
+        # "type": "module"
+		# "has_permission": "box.api.permission.has_app_permission"
+	}
+]
 
 # Includes in <head>
 # ------------------
@@ -263,9 +268,9 @@ website_route_rules = [
 # Static Assets
 # --------------
 # Global JS injected into EVERY desk page
-app_include_js = [
-    "/assets/box/js/box_desk.js"
-]
+# app_include_js = [
+#     "/assets/box/js/box_desk.js"
+# ]
 
 # Boot Session
 # -------------
