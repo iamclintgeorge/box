@@ -1,0 +1,22 @@
+{
+ "app": "box",
+ "bg_color": "gray",
+ "creation": "2026-04-28 14:28:59.709656",
+ "docstatus": 0,
+ "doctype": "Desktop Icon",
+ "hidden": 0,
+ "icon_type": "App",
+ "idx": 0,
+ "label": "Box",
+ "link": "/desk/box",
+ "link_to": "Box",
+ "link_type": "Workspace Sidebar",
+ "logo_url": "/assets/box/desktop_icons/box.svg",
+ "modified": "2026-04-29 15:20:22.861268",
+ "modified_by": "Administrator",
+ "name": "Box",
+ "owner": "Administrator",
+ "restrict_removal": 0,
+ "roles": [],
+ "standard": 1
+}
