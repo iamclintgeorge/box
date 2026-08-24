@@ -28,10 +28,20 @@ Replaces the originally-planned `complete_setup` API (Phase 4 revision — see t
 - Sets `Frappe Box Settings.provisioning_complete = 1` and `provisioned_on = now`.
 - Idempotent: safe to call more than once (re-checked in Phase 5).
 
-## Phase 6+: authenticated APIs (not yet implemented)
+## API: `frappe_box_app.api.get_api_key`
 
-Specified in the Flutter app's `specs/phase-6-sign-in-and-dashboard.md` and `specs/phase-7-wifi-network-management.md`:
+- Authenticated (`@frappe.whitelist()`, no `allow_guest`).
+- No arguments.
+- Returns `{api_key, api_secret}` for `frappe.session.user`. Idempotent: reuses the existing key/secret if already set (`api_keys.get_or_create`), so re-signing in doesn't invalidate a previously issued pair. Sets `User.api_key`/`api_secret` directly via `frappe.db.set_value`/`set_encrypted_password` rather than loading and saving the whole `User` document, to avoid unrelated save side effects (global search indexing, etc.) on every sign-in.
 
-- `frappe_box_app.api.get_api_key()` — authenticated, returns/generates the calling user's Frappe API key pair.
-- `frappe_box_app.api.system_stats()` — authenticated, returns CPU temperature/memory/storage.
-- `frappe_box_app.api.list_wifi_networks()` / `add_wifi_network(ssid, password)` / `remove_wifi_network(ssid)` — authenticated, proxy to the device daemon.
+## API: `frappe_box_app.api.system_stats`
+
+- Authenticated.
+- No arguments.
+- Returns `{cpu_temperature_celsius, memory: {used_bytes, total_bytes}, storage: {used_bytes, total_bytes}}`, read from `/sys/class/thermal/thermal_zone0/temp`, `/proc/meminfo`, and `shutil.disk_usage("/")` (`system_stats.py`). `cpu_temperature_celsius` is `null` when no thermal zone is available (e.g. in a dev container).
+
+## APIs: `frappe_box_app.api.list_wifi_networks` / `add_wifi_network(ssid, password)` / `remove_wifi_network(ssid)`
+
+- Authenticated.
+- Proxy to the box daemon's local command surface (`box-scripts/bin/frappe-box-wifi-networks`, see that repo's Phase 7 notes) over `sudo -n <path> <command> [args]` — the Frappe worker's OS user is granted exactly that one command via a sudoers rule (`box-scripts/config/sudoers.d/frappe-box-wifi`), since writing `wpa_supplicant.conf` and reloading it needs root (`wifi_networks.py`).
+- `list_wifi_networks()` returns `{networks: [ssid, ...]}`; `add_wifi_network`/`remove_wifi_network` return `{status: "ok"}`.
