@@ -45,3 +45,10 @@ Replaces the originally-planned `complete_setup` API (Phase 4 revision — see t
 - Authenticated.
 - Proxy to the box daemon's local command surface (`box-scripts/bin/frappe-box-wifi-networks`, see that repo's Phase 7 notes) over `sudo -n <path> <command> [args]` — the Frappe worker's OS user is granted exactly that one command via a sudoers rule (`box-scripts/config/sudoers.d/frappe-box-wifi`), since writing `wpa_supplicant.conf` and reloading it needs root (`wifi_networks.py`).
 - `list_wifi_networks()` returns `{networks: [ssid, ...]}`; `add_wifi_network`/`remove_wifi_network` return `{status: "ok"}`.
+
+## API: `frappe_box_app.api.box_info`
+
+- Authenticated.
+- No arguments.
+- Returns `{box_name, serial_number, ip_address, provisioning_complete, provisioned_on}` — `Frappe Box Settings` plus a live-read LAN IP (`box_info.py`, a UDP "connect" that never actually sends a packet, so it resolves correctly on the box's internet-less network).
+- Used by the Desk "Box Settings" page (`frappe_box/page/box_settings/`) to show the IP needed to SSH into the box. The Desk "Box Dashboard" page (`frappe_box/page/box_dashboard/`) reuses `system_stats` unchanged; both pages are plain Frappe `Page` doctypes, not a separate frontend.

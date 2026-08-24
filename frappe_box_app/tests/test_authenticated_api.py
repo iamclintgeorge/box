@@ -1,7 +1,7 @@
 import frappe
 from frappe.tests import IntegrationTestCase
 
-from frappe_box_app.api import get_api_key, system_stats
+from frappe_box_app.api import box_info, get_api_key, system_stats
 
 
 def _assert_guest_rejected(test_case, fn):
@@ -37,3 +37,19 @@ class TestSystemStats(IntegrationTestCase):
 
 	def test_guest_requests_are_rejected(self):
 		_assert_guest_rejected(self, system_stats)
+
+
+class TestBoxInfo(IntegrationTestCase):
+	def setUp(self):
+		frappe.db.set_single_value("Frappe Box Settings", "box_name", "FrappeBox-4F2A")
+		frappe.db.set_single_value("Frappe Box Settings", "serial_number", "SN-001")
+
+	def test_returns_identity_and_ip_address(self):
+		info = box_info()
+
+		self.assertEqual(info["box_name"], "FrappeBox-4F2A")
+		self.assertEqual(info["serial_number"], "SN-001")
+		self.assertTrue(info["ip_address"])
+
+	def test_guest_requests_are_rejected(self):
+		_assert_guest_rejected(self, box_info)
