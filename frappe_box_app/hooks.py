@@ -88,6 +88,13 @@ app_license = "mit"
 # before_install = "frappe_box_app.install.before_install"
 # after_install = "frappe_box_app.install.after_install"
 
+# Setup Wizard
+# ------------
+# Marks the box provisioned once the site's own setup wizard completes,
+# instead of a bespoke complete_setup API (see specs/api-contract.md).
+
+setup_wizard_success = ["frappe_box_app.setup.on_setup_wizard_success"]
+
 # Uninstallation
 # ------------
 
