@@ -21,6 +21,15 @@ Sync point between the device daemon (`box-scripts`), this backend, and the Flut
 - Returns `{status: "ok", box_name, provisioning_complete}`.
 - Used by the Flutter app (Phase 3) purely to confirm the box is reachable over mDNS/LAN and to decide, on relaunch, whether to skip straight to the "box ready" screen (Phase 5) or, from Phase 6, straight to the dashboard.
 
+## API: `frappe_box_app.api.pair`
+
+- `allow_guest=True` (no session exists yet at this point in the flow) — but reachable **only from loopback**, enforced by `box-scripts`' nginx config (`config/frappe.local` denies every other source IP on this one path). The real gate is `check_password`, not the network boundary alone.
+- Arguments: `password`, `box_name`, `serial_number` — the latter two sourced from the BLE daemon's own hardware read (`box-scripts/ble/identity.py`), passed through rather than re-derived here.
+- Checks `password` against the site's `Administrator` account via Frappe's own `frappe.utils.password.check_password` (raises `frappe.AuthenticationError` on a mismatch — no bespoke error shape).
+- On success: writes `box_name`/`serial_number` into `Frappe Box Settings` (`box_identity.sync`) and returns `{api_key, api_secret, box_name, serial_number}` via `api_keys.get_or_create("Administrator")` — idempotent, same key pair as `get_api_key` would return for that user.
+- Called by the BLE daemon (Phase 9) once a phone completes the Pairing GATT characteristic exchange over a bonded link — the daemon is the only intended caller, reaching this over `http://localhost` on the box itself.
+- Superseded `get_api_key`/the Flutter sign-in screen as the way the app gets a working API key — see the Flutter app's Phase 9–12 specs.
+
 ## Hook: `setup_wizard_success` → `frappe_box_app.setup.on_setup_wizard_success`
 
 Replaces the originally-planned `complete_setup` API (Phase 4 revision — see the Flutter spec). Frappe's own setup wizard already handles admin account creation on a fresh site; this app doesn't need its own. Frappe calls every function registered under the `setup_wizard_success` hook with the wizard's `args` once it completes successfully.
