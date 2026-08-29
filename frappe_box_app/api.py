@@ -1,6 +1,7 @@
 import frappe
+from frappe.utils.password import check_password
 
-from frappe_box_app import api_keys, wifi_networks
+from frappe_box_app import api_keys, box_identity, wifi_networks
 from frappe_box_app import box_info as box_info_module
 from frappe_box_app import system_stats as system_stats_module
 
@@ -13,6 +14,23 @@ def ping():
 		"box_name": frappe.db.get_single_value("Frappe Box Settings", "box_name"),
 		"provisioning_complete": frappe.db.get_single_value("Frappe Box Settings", "provisioning_complete"),
 	}
+
+
+@frappe.whitelist(allow_guest=True, methods=["POST"])
+def pair(password: str, box_name: str, serial_number: str):
+	"""The BLE pairing exchange (Phase 9): the daemon calls this over
+	loopback only (see box-scripts' nginx config, which denies this path to
+	anything but 127.0.0.1) once the phone has written its claimed password
+	over a bonded BLE link and the daemon has read back its own hardware
+	identity.
+
+	`allow_guest=True` because no session exists yet at this point in the
+	flow; the real gate is `check_password`, which raises
+	`frappe.AuthenticationError` on a wrong password.
+	"""
+	check_password("Administrator", password)
+	box_identity.sync(box_name, serial_number)
+	return {**api_keys.get_or_create("Administrator"), "box_name": box_name, "serial_number": serial_number}
 
 
 @frappe.whitelist()
