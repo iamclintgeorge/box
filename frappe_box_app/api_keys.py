@@ -9,11 +9,11 @@ from frappe.utils.password import get_decrypted_password, set_encrypted_password
 def get_or_create(user: str) -> dict:
 	"""Returns [user]'s API key pair, generating one on first call.
 
-	Idempotent: reuses both the key and the secret if already set, so
-	repeated calls (e.g. re-signing in) don't invalidate a previously
-	issued pair. Sets the two fields directly rather than loading and
-	saving the full User document, to avoid unrelated save side effects
-	(global search indexing, notification sync, ...) on every sign-in.
+	Idempotent: reuses both the key and the secret if already set, so a
+	repeated call (e.g. re-pairing over BLE) doesn't invalidate a
+	previously issued pair. Sets the two fields directly rather than
+	loading and saving the full User document, to avoid unrelated save
+	side effects (global search indexing, notification sync, ...).
 	"""
 	api_key = frappe.db.get_value("User", user, "api_key")
 	if not api_key:

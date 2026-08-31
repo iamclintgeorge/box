@@ -1,7 +1,7 @@
 import frappe
 from frappe.tests import IntegrationTestCase
 
-from frappe_box_app.api import box_info, get_api_key, system_stats
+from frappe_box_app.api import box_info, system_stats
 
 
 def _assert_guest_rejected(test_case, fn):
@@ -12,19 +12,6 @@ def _assert_guest_rejected(test_case, fn):
 			frappe.is_whitelisted(fn)
 	finally:
 		frappe.set_user(original_user)
-
-
-class TestGetApiKey(IntegrationTestCase):
-	def test_generates_and_reuses_the_same_key_pair(self):
-		first = get_api_key()
-		second = get_api_key()
-
-		self.assertEqual(first, second)
-		self.assertTrue(first["api_key"])
-		self.assertTrue(first["api_secret"])
-
-	def test_guest_requests_are_rejected(self):
-		_assert_guest_rejected(self, get_api_key)
 
 
 class TestSystemStats(IntegrationTestCase):

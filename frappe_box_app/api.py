@@ -34,12 +34,6 @@ def pair(password: str, box_name: str, serial_number: str):
 
 
 @frappe.whitelist()
-def get_api_key():
-	"""Issues (or reuses) the calling user's API key pair for Phase 6 sign-in."""
-	return api_keys.get_or_create(frappe.session.user)
-
-
-@frappe.whitelist()
 def system_stats():
 	"""CPU temperature, memory, and storage usage for the dashboard."""
 	return system_stats_module.collect()

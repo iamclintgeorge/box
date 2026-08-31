@@ -7,8 +7,7 @@
   "box_name",
   "serial_number",
   "provisioning_complete",
-  "provisioned_on",
-  "claim_token"
+  "provisioned_on"
  ],
  "fields": [
   {
@@ -31,11 +30,6 @@
    "fieldtype": "Datetime",
    "label": "Provisioned On",
    "read_only": 1
-  },
-  {
-   "fieldname": "claim_token",
-   "fieldtype": "Data",
-   "label": "Claim Token"
   }
  ],
  "issingle": 1,
