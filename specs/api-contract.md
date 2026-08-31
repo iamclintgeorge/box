@@ -12,23 +12,22 @@ Sync point between the device daemon (`box-scripts`), this backend, and the Flut
 | `serial_number` | Data | |
 | `provisioning_complete` | Check | Flips to 1 exactly once, by the `setup_wizard_success` hook |
 | `provisioned_on` | Datetime | Set when `provisioning_complete` flips |
-| `claim_token` | Data | Written locally by the device daemon after a successful WiFi join. Currently unused by any API — see the Flutter spec's Phase 4 note on why account creation is no longer gated by it |
 
 ## API: `frappe_box_app.api.ping`
 
 - `allow_guest=True` (no admin user exists yet at this point in the flow).
 - No arguments.
 - Returns `{status: "ok", box_name, provisioning_complete}`.
-- Used by the Flutter app (Phase 3) purely to confirm the box is reachable over mDNS/LAN and to decide, on relaunch, whether to skip straight to the "box ready" screen (Phase 5) or, from Phase 6, straight to the dashboard.
+- A simple guest-accessible reachability check, originally used by the Flutter app (Phase 3) to confirm the box was on the LAN before any API key existed. Superseded by the authenticated `box_info` for that purpose once Phase 9's BLE pairing always issues a key first (Phase 11) — kept as a standalone health-check endpoint, not called by the app anymore.
 
 ## API: `frappe_box_app.api.pair`
 
 - `allow_guest=True` (no session exists yet at this point in the flow) — but reachable **only from loopback**, enforced by `box-scripts`' nginx config (`config/frappe.local` denies every other source IP on this one path). The real gate is `check_password`, not the network boundary alone.
 - Arguments: `password`, `box_name`, `serial_number` — the latter two sourced from the BLE daemon's own hardware read (`box-scripts/ble/identity.py`), passed through rather than re-derived here.
 - Checks `password` against the site's `Administrator` account via Frappe's own `frappe.utils.password.check_password` (raises `frappe.AuthenticationError` on a mismatch — no bespoke error shape).
-- On success: writes `box_name`/`serial_number` into `Frappe Box Settings` (`box_identity.sync`) and returns `{api_key, api_secret, box_name, serial_number}` via `api_keys.get_or_create("Administrator")` — idempotent, same key pair as `get_api_key` would return for that user.
+- On success: writes `box_name`/`serial_number` into `Frappe Box Settings` (`box_identity.sync`) and returns `{api_key, api_secret, box_name, serial_number}` via `api_keys.get_or_create("Administrator")` — idempotent, so re-pairing over BLE doesn't invalidate a previously issued pair.
 - Called by the BLE daemon (Phase 9) once a phone completes the Pairing GATT characteristic exchange over a bonded link — the daemon is the only intended caller, reaching this over `http://localhost` on the box itself.
-- Superseded `get_api_key`/the Flutter sign-in screen as the way the app gets a working API key — see the Flutter app's Phase 9–12 specs.
+- Superseded `get_api_key`/the Flutter sign-in screen as the way the app gets a working API key — both retired in Phase 12 (see the Flutter app's Phase 9–12 specs).
 
 ## Hook: `setup_wizard_success` → `frappe_box_app.setup.on_setup_wizard_success`
 
@@ -36,12 +35,6 @@ Replaces the originally-planned `complete_setup` API (Phase 4 revision — see t
 
 - Sets `Frappe Box Settings.provisioning_complete = 1` and `provisioned_on = now`.
 - Idempotent: safe to call more than once (re-checked in Phase 5).
-
-## API: `frappe_box_app.api.get_api_key`
-
-- Authenticated (`@frappe.whitelist()`, no `allow_guest`).
-- No arguments.
-- Returns `{api_key, api_secret}` for `frappe.session.user`. Idempotent: reuses the existing key/secret if already set (`api_keys.get_or_create`), so re-signing in doesn't invalidate a previously issued pair. Sets `User.api_key`/`api_secret` directly via `frappe.db.set_value`/`set_encrypted_password` rather than loading and saving the whole `User` document, to avoid unrelated save side effects (global search indexing, etc.) on every sign-in.
 
 ## API: `frappe_box_app.api.system_stats`
 
