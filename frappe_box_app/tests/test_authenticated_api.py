@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 import frappe
 from frappe.tests import IntegrationTestCase
 
@@ -38,10 +40,13 @@ class TestBoxInfo(IntegrationTestCase):
 		self.assertEqual(info["serial_number"], "SN-001")
 		self.assertTrue(info["ip_address"])
 
-	def test_provisioning_complete_is_a_bool(self):
-		frappe.db.set_single_value("Frappe Box Settings", "provisioning_complete", 1)
-
-		info = box_info()
+	def test_provisioning_complete_reflects_frappes_own_setup_state(self):
+		"""Reads `frappe.is_setup_complete()` directly rather than our own
+		DocType flag, which only the `setup_wizard_success` hook writes and
+		which Frappe skips calling whenever `is_setup_complete()` is already
+		true — leaving that flag stuck permanently wrong on such a site."""
+		with patch.object(frappe, "is_setup_complete", return_value=True):
+			info = box_info()
 
 		self.assertIsInstance(info["provisioning_complete"], bool)
 		self.assertTrue(info["provisioning_complete"])
