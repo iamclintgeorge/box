@@ -12,9 +12,7 @@ def ping():
 	return {
 		"status": "ok",
 		"box_name": frappe.db.get_single_value("Frappe Box Settings", "box_name"),
-		"provisioning_complete": bool(
-			frappe.db.get_single_value("Frappe Box Settings", "provisioning_complete")
-		),
+		"provisioning_complete": bool(frappe.is_setup_complete()),
 	}
 
 
@@ -65,7 +63,7 @@ def box_info():
 	return {
 		"box_name": settings.box_name,
 		"serial_number": settings.serial_number,
-		"provisioning_complete": bool(settings.provisioning_complete),
+		"provisioning_complete": bool(frappe.is_setup_complete()),
 		"provisioned_on": settings.provisioned_on,
 		**box_info_module.collect(),
 	}
