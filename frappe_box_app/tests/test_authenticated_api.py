@@ -38,5 +38,13 @@ class TestBoxInfo(IntegrationTestCase):
 		self.assertEqual(info["serial_number"], "SN-001")
 		self.assertTrue(info["ip_address"])
 
+	def test_provisioning_complete_is_a_bool(self):
+		frappe.db.set_single_value("Frappe Box Settings", "provisioning_complete", 1)
+
+		info = box_info()
+
+		self.assertIsInstance(info["provisioning_complete"], bool)
+		self.assertTrue(info["provisioning_complete"])
+
 	def test_guest_requests_are_rejected(self):
 		_assert_guest_rejected(self, box_info)
