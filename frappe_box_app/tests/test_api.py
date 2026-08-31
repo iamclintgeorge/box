@@ -13,8 +13,9 @@ class TestPing(IntegrationTestCase):
 		response = ping()
 		self.assertEqual(
 			response,
-			{"status": "ok", "box_name": "FrappeBox-4F2A", "provisioning_complete": 0},
+			{"status": "ok", "box_name": "FrappeBox-4F2A", "provisioning_complete": False},
 		)
+		self.assertIsInstance(response["provisioning_complete"], bool)
 
 	def test_ping_is_accessible_as_guest(self):
 		original_user = frappe.session.user
